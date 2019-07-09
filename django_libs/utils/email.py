@@ -7,10 +7,12 @@ from django.utils.encoding import force_text
 
 try:
     import mailer
+    from mailer.models import make_message
 except ImportError:  # pragma: nocover
     pass
 
 from .converter import html_to_plain_text
+from ..loaders import load_member_from_setting
 
 
 def send_email(request, context, subject_template, body_template,
@@ -39,6 +41,12 @@ def send_email(request, context, subject_template, body_template,
     headers = headers or {}
     if not reply_to:
         reply_to = from_email
+
+    # Add additional context
+    if hasattr(settings, 'DJANGO_LIBS_EMAIL_CONTEXT'):
+        context_fn = load_member_from_setting('DJANGO_LIBS_EMAIL_CONTEXT')
+        context.update(context_fn(request))
+
     if request and request.get_host():
         domain = request.get_host()
         protocol = 'https://' if request.is_secure() else 'http://'
@@ -55,22 +63,30 @@ def send_email(request, context, subject_template, body_template,
     message_html = render_to_string(template_name=body_template,
                                     context=context, request=request)
     message_plaintext = html_to_plain_text(message_html)
+    subject = force_text(subject)
+    message = force_text(message_plaintext)
+    email = EmailMultiAlternatives(
+        subject=subject,
+        body=message,
+        from_email=from_email,
+        to=recipients,
+        cc=cc,
+        bcc=bcc,
+        headers=headers,
+        reply_to=[reply_to],
+    )
+    email.attach_alternative(message_html, "text/html")
     if settings.EMAIL_BACKEND == 'mailer.backend.DbBackend':
-        mailer.send_html_mail(
-            subject, message_plaintext, message_html, from_email, recipients,
-            priority=priority, headers=headers)
-    else:
-        subject = force_text(subject)
-        message = force_text(message_plaintext)
-        email = EmailMultiAlternatives(
+        # We customize `mailer.send_html_mail` to enable CC and BCC
+        priority = mailer.get_priority(priority)
+        msg = make_message(
             subject=subject,
             body=message,
             from_email=from_email,
             to=recipients,
-            cc=cc,
-            bcc=bcc,
-            headers=headers,
-            reply_to=[reply_to],
+            priority=priority,
         )
-        email.attach_alternative(message_html, "text/html")
+        msg.email = email
+        msg.save()
+    else:
         email.send()

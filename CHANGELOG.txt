@@ -1,5 +1,13 @@
+=== 2.0.X ===
+
+- Django 2 compatibility
+- Added cc/bcc support to email sendings
+
 === 1.67.X ===
 
+- Allow extra context for emails
+- Enabled request factory mixin to handle old views
+- Fixed unicode issue in html to plain text converter
 - Re-arranged send_email function to make a proper use of cc and bcc options
 - Allow html in help texts
 - fixed logging filter, if no user agent could be detected
@@ -9,6 +17,8 @@
 - prepared app for Django 1.9 and Python 3.5
 - dropped support for Django<1.6
 - Removed deprecated stuff and updated docs
+- fixed init function of image widget
+- added variables to customize column sizes in horizontal forms
 
 === 1.66.X ===
 

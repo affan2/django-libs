@@ -3,22 +3,32 @@ import datetime
 import importlib
 
 from django import template
-from django.template.base import TOKEN_BLOCK, TOKEN_VAR
+try:
+    from django.template.base import TOKEN_BLOCK, TOKEN_VAR
+except ImportError:
+    from django.template.base import TokenType
+    TOKEN_BLOCK = TokenType.BLOCK
+    TOKEN_VAR = TokenType.VAR
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
-from django.core.urlresolvers import resolve, Resolver404
 from django.db.models.fields import FieldDoesNotExist
 from django.template.defaultfilters import stringfilter
 from django.utils.encoding import force_text
 
+try:  # django <= 1.6
+    from django.core.urlresolvers import resolve, Resolver404
+except ImportError:  # >= django 1.7
+    from django.urls import resolve, Resolver404
+
 from ..loaders import load_member
 
-
 register = template.Library()
+register_tag = register.assignment_tag if hasattr(
+    register, 'assignment_tag') else register.simple_tag
 
 
-@register.assignment_tag
+@register_tag
 def add_form_widget_attr(field, attr_name, attr_value, replace=0):
     """
     Adds widget attributes to a bound form field.
@@ -70,6 +80,7 @@ def block_anyfilter(parser, token):
 
 
 class BlockAnyFilterNode(template.Node):
+
     def __init__(self, nodelist, original_tag_fqn, *args):
         self.nodelist = nodelist
         self.original_tag = load_member(original_tag_fqn)
@@ -80,7 +91,7 @@ class BlockAnyFilterNode(template.Node):
         return self.original_tag(output, *self.args)
 
 
-@register.assignment_tag
+@register_tag
 def calculate_dimensions(image, long_side, short_side):
     """Returns the thumbnail dimensions depending on the images format."""
     if image.width >= image.height:
@@ -88,7 +99,7 @@ def calculate_dimensions(image, long_side, short_side):
     return '{0}x{1}'.format(short_side, long_side)
 
 
-@register.assignment_tag
+@register_tag
 def call(obj, method, *args, **kwargs):
     """
     Allows to call any method of any object with parameters.
@@ -118,7 +129,7 @@ def call(obj, method, *args, **kwargs):
     return function_or_dict_or_member[args[0]]
 
 
-@register.assignment_tag
+@register_tag
 def concatenate(*args, **kwargs):
     """
     Concatenates the given strings.
@@ -157,7 +168,7 @@ def get_content_type(obj, field_name=False):
     return content_type
 
 
-@register.assignment_tag
+@register_tag
 def get_form_field_type(field):
     """
     Returns the widget type of the given form field.
@@ -202,7 +213,7 @@ def get_verbose(obj, field_name=""):
     return ""
 
 
-@register.assignment_tag
+@register_tag
 def get_query_params(request, *args):
     """
     Allows to change one of the URL get parameter while keeping all the others.
@@ -248,6 +259,7 @@ def get_query_params(request, *args):
 
 
 class LoadContextNode(template.Node):
+
     def __init__(self, fqn):
         self.fqn = fqn
 
@@ -348,7 +360,7 @@ def get_range(value, max_num=None):
     return range(value)
 
 
-@register.assignment_tag
+@register_tag
 def get_range_around(range_value, current_item, padding):
     """
     Returns a range of numbers around the given number.
@@ -408,7 +420,7 @@ def get_range_around(range_value, current_item, padding):
     }
 
 
-@register.assignment_tag(takes_context=True)
+@register_tag(takes_context=True)
 def is_context_variable(context, variable_name):
     """
     Returns true if the given variable name is in the template context.
@@ -431,10 +443,9 @@ def render_analytics_code():
 
     """
     return {
-        'ANALYTICS_TRACKING_ID': getattr(
-            settings, 'ANALYTICS_TRACKING_ID', 'UA-XXXXXXX-XX'),
-        'ANALYTICS_DOMAIN': getattr(
-            settings, 'ANALYTICS_DOMAIN', 'auto')
+        'ANALYTICS_TRACKING_ID': getattr(settings, 'ANALYTICS_TRACKING_ID',
+                                         'UA-XXXXXXX-XX'),
+        'ANALYTICS_DOMAIN': getattr(settings, 'ANALYTICS_DOMAIN', 'auto')
     }
 
 
@@ -473,12 +484,13 @@ def sum(context, key, value, multiplier=1):
     return ''
 
 
-@register.assignment_tag
+@register_tag
 def set_context(value):
     return value
 
 
 class VerbatimNode(template.Node):
+
     def __init__(self, text):
         self.text = text
 
@@ -514,20 +526,18 @@ def exclude(qs, qs_to_exclude):
     return qs.exclude(pk__in=qs_to_exclude.values_list('pk'))
 
 
-@register.assignment_tag
+@register_tag
 def time_until(date_or_datetime):
     if isinstance(date_or_datetime, datetime.date):
-        datetime_ = datetime.datetime(
-            date_or_datetime.year,
-            date_or_datetime.month,
-            date_or_datetime.day,
-            0, 0)
+        datetime_ = datetime.datetime(date_or_datetime.year,
+                                      date_or_datetime.month,
+                                      date_or_datetime.day, 0, 0)
     else:
         datetime_ = date_or_datetime
     return datetime_ - datetime.datetime.now()
 
 
-@register.assignment_tag
+@register_tag
 def days_until(date_or_datetime):
     days = time_until(date_or_datetime).days
     if days >= 0:
@@ -535,7 +545,7 @@ def days_until(date_or_datetime):
     return 0
 
 
-@register.assignment_tag
+@register_tag
 def hours_until(date_or_datetime):
     closes_in = time_until(date_or_datetime)
     if closes_in.days < 0:
@@ -543,7 +553,7 @@ def hours_until(date_or_datetime):
     return closes_in.seconds / 3600
 
 
-@register.assignment_tag
+@register_tag
 def minutes_until(date_or_datetime):
     closes_in = time_until(date_or_datetime)
     if closes_in.days < 0:
@@ -567,6 +577,6 @@ def append_s(value):
         return u"{0}'s".format(value)
 
 
-@register.assignment_tag
+@register_tag
 def get_site():
     return Site.objects.get_current()

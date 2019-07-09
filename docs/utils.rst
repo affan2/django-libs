@@ -147,6 +147,18 @@ In order to use it, include the following code::
         reply_to='foo@example.com',  # optional
     )
 
+If you want to add additional context variables you can use the following
+setting:
+
+    DJANGO_LIBS_EMAIL_CONTEXT = 'path.to.context_function'
+
+The relevant function should allow a request parameter:
+
+    def context_function(request):
+        return {
+            'foo': 'bar',
+        }
+
 Log
 ---
 
