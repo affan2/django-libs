@@ -2,11 +2,7 @@
 import sys
 
 from django.conf import settings
-
-try:
-    from html.parser import HTMLParser
-except ImportError:
-    from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 try:
     from bs4 import BeautifulSoup
