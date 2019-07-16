@@ -15,4 +15,4 @@ class Command(BaseCommand):
             return
         log_count = old_logs.count()
         old_logs.delete()
-        print('Deleted {} message logs.'.format(log_count))
+        print(('Deleted {} message logs.'.format(log_count)))

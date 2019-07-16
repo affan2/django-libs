@@ -242,12 +242,12 @@ class GetRangeTestCase(TestCase):
 
     def test_filter(self):
         result = tags.get_range(5)
-        self.assertEqual(result, range(5), msg=(
+        self.assertEqual(result, list(range(5)), msg=(
             "Filter should behave exactly like Python's range function"))
 
     def test_filter_with_max_num(self):
         result = tags.get_range(3, 5)
-        self.assertEqual(result, range(2), msg=(
+        self.assertEqual(result, list(range(2)), msg=(
             'Filter should return the difference between value and max_num'))
 
 

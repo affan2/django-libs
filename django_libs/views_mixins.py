@@ -66,7 +66,7 @@ class DetailViewWithPostAction(DetailView):
     """
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        for key in self.request.POST.keys():
+        for key in list(self.request.POST.keys()):
             if key.startswith('post_'):
                 getattr(self, key)()
                 break

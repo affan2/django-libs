@@ -41,8 +41,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'django-libs'
-copyright = u'2012, Martin Brochhaus'
+project = 'django-libs'
+copyright = '2012, Martin Brochhaus'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -186,8 +186,8 @@ latex_elements = {
 # (source start file, target name, title, author,
 # documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'django-libs.tex', u'django-libs Documentation',
-     u'Martin Brochhaus', 'manual'),
+    ('index', 'django-libs.tex', 'django-libs Documentation',
+     'Martin Brochhaus', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -216,9 +216,10 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'django-libs', u'django-libs Documentation',
-     [u'Martin Brochhaus'], 1)
+    ('index', 'django-libs', 'django-libs Documentation', 'Martin Brochhaus',
+     'django-libs', 'One line description of project.', 'Miscellaneous'),
 ]
+
 
 # If true, show URL addresses after external links.
 #man_show_urls = False
@@ -230,8 +231,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'django-libs', u'django-libs Documentation',
-     u'Martin Brochhaus', 'django-libs', 'One line description of project.',
+    ('index', 'django-libs', 'django-libs Documentation',
+     'Martin Brochhaus', 'django-libs', 'One line description of project.',
      'Miscellaneous'),
 ]
 

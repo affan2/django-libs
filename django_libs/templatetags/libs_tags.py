@@ -357,7 +357,7 @@ def get_range(value, max_num=None):
     """
     if max_num:
         value = max_num - value
-    return range(value)
+    return list(range(value))
 
 
 @register_tag
@@ -390,14 +390,14 @@ def get_range_around(range_value, current_item, padding):
     left_bound = padding
     right_bound = range_value - padding
     if range_value <= total_items:
-        range_items = range(1, range_value + 1)
+        range_items = list(range(1, range_value + 1))
         return {
             'range_items': range_items,
             'left_padding': False,
             'right_padding': False,
         }
     if current_item <= left_bound:
-        range_items = range(1, range_value + 1)[:total_items]
+        range_items = list(range(1, range_value + 1))[:total_items]
         return {
             'range_items': range_items,
             'left_padding': range_items[0] > 1,
@@ -405,14 +405,14 @@ def get_range_around(range_value, current_item, padding):
         }
 
     if current_item >= right_bound:
-        range_items = range(1, range_value + 1)[-total_items:]
+        range_items = list(range(1, range_value + 1))[-total_items:]
         return {
             'range_items': range_items,
             'left_padding': range_items[0] > 1,
             'right_padding': range_items[-1] < range_value,
         }
 
-    range_items = range(current_item - padding, current_item + padding + 1)
+    range_items = list(range(current_item - padding, current_item + padding + 1))
     return {
         'range_items': range_items,
         'left_padding': True,
@@ -572,9 +572,9 @@ def append_s(value):
 
     """
     if value.endswith('s'):
-        return u"{0}'".format(value)
+        return "{0}'".format(value)
     else:
-        return u"{0}'s".format(value)
+        return "{0}'s".format(value)
 
 
 @register_tag

@@ -93,7 +93,7 @@ class ColorPickerWidget(TextInput):
     def render(self, name, value, attrs=None):
         rendered = super(ColorPickerWidget, self).render(name, value, attrs)
         return rendered + mark_safe(
-            u'''<script type="text/javascript">
+            '''<script type="text/javascript">
                 $('#id_%s').ColorPicker({
                 onSubmit: function(hsb, hex, rgb, el) {
                     $(el).val(hex);
