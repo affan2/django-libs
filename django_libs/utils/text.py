@@ -12,5 +12,5 @@ def create_random_string(length=7, chars='ABCDEFGHJKMNPQRSTUVWXYZ23456789',
 
     """
     if repetitions:
-        return ''.join(random.choice(chars) for _ in range(length))
+        return ''.join(random.choice(chars) for _ in list(range(length)))
     return ''.join(random.sample(chars, length))
