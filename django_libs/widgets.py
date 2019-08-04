@@ -34,8 +34,8 @@ class LibsImageWidget(widgets.ClearableFileInput):
             self.classes = ''
         super(LibsImageWidget, self).__init__(attrs)
 
-    def render(self, name, value, attrs=None):
-        final_attrs = self.build_attrs(attrs, type=self.input_type, name=name)
+    def render(self, name, value, attrs=None, renderer=None):
+        final_attrs = self.build_attrs(attrs, {"type": self.input_type, "name": name}, )
         checkbox_name = self.clear_checkbox_name(name)
         checkbox_id = self.clear_checkbox_id(checkbox_name)
         context = {
@@ -90,7 +90,7 @@ class ColorPickerWidget(TextInput):
         self.language = language or settings.LANGUAGE_CODE[:2]
         super(ColorPickerWidget, self).__init__(attrs=attrs)
 
-    def render(self, name, value, attrs=None):
+    def render(self, name, value, attrs=None, renderer=None):
         rendered = super(ColorPickerWidget, self).render(name, value, attrs)
         return rendered + mark_safe(
             '''<script type="text/javascript">
