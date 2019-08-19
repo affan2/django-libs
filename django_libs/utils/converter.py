@@ -1,5 +1,6 @@
 """Additional helpful utility functions."""
 import sys
+from abc import ABC
 
 from django.conf import settings
 from html.parser import HTMLParser
@@ -14,7 +15,7 @@ except ImportError:  # pragma: nocover
         return x
 
 
-class HTML2PlainParser(HTMLParser):
+class HTML2PlainParser(HTMLParser, ABC):
     """Custom html parser to convert html code to plain text."""
     def __init__(self):
         try:
