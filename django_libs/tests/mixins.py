@@ -5,6 +5,7 @@ Generally useful mixins for view tests (integration tests) of any project.
 import sys
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.storage.fallback import FallbackStorage

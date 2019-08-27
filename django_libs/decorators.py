@@ -4,8 +4,8 @@ import re
 
 from django.http import Http404
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
 from lockfile import FileLock, AlreadyLocked, LockTimeout
+from django.contrib.auth import get_user_model
 
 
 def lockfile(lockfile_name, lock_wait_timeout=-1):
@@ -56,7 +56,7 @@ def get_username(identifier):
     pattern = re.compile('.+@\w+\..+')
     if pattern.match(identifier):
         try:
-            user = User.objects.get(email=identifier)
+            user = get_user_model().objects.get(email=identifier)
         except:
             raise Http404
         else:

@@ -6,12 +6,15 @@ maintained. We recommend to use https://github.com/klen/mixer for fixtures.
 from io import BytesIO
 import warnings
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils.timezone import now
 
 from hashlib import md5
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
 
 try:
     from PIL import Image
@@ -98,7 +101,7 @@ class UserFactory(factory.DjangoModelFactory):
     email = factory.Sequence(lambda n: 'user{0}@example.com'.format(n))
 
     class Meta:
-        model = User
+        model = get_user_model()
 
     def __new__(cls, **kwargs):
         warnings.warn(
