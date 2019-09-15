@@ -13,8 +13,8 @@ views to your ``urls.py``::
     from django_libs.views import Http404TestView, Http500TestView
     urlpatterns += patterns(
         '',
-        url(r'^404/$', Http404TestView.as_view()),
-        url(r'^500/$', Http500TestView.as_view()),
+        re_path(r'^404/$', Http404TestView.as_view()),
+        re_path(r'^500/$', Http500TestView.as_view()),
         ...
     )
 
@@ -40,7 +40,7 @@ This ``HybridView`` does the same thing. Here is how you use it in your
     urlpatterns += patterns(
         '',
         ...
-        url(r'^$',
+        re_path(r'^$',
             HybridView.as_view(
                 authed_view=authed_view, anonymous_view=anonymous_view,
                 anonymous_view_kwargs=anonymous_view_kwargs
@@ -64,7 +64,7 @@ Hook up the view in your urls:::
     urlpatterns += patterns(
         '',
         ...
-        url(r'^comments/$', PaginatedCommentAJAXView.as_view(),
+        re_path(r'^comments/$', PaginatedCommentAJAXView.as_view(),
             name='libs_comment_ajax'),
     )
 
@@ -113,7 +113,7 @@ In order to use this view, hook it up in your ``urls.py``::
     from django_libs.views import RapidPrototypingView
     urlpatterns += patterns(
         '',
-        url(r'^prototype/(?P<template_path>.*)$',
+        re_path(r'^prototype/(?P<template_path>.*)$',
             RapidPrototypingView.as_view(),
             name='prototype')
         ...
@@ -138,7 +138,7 @@ In order to use this view, hook it up in your ``urls.py``::
     from django_libs.views import UpdateSessionAJAXView
     urlpatterns += patterns(
         '',
-        url(r'^update-session/$', UpdateSessionAJAXView.as_view(),
+        re_path(r'^update-session/$', UpdateSessionAJAXView.as_view(),
             name='update_session'),
         ...
     )

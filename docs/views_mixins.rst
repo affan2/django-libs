@@ -49,7 +49,7 @@ In order to use it, import it like all the other generic class based views
 and view mixins.
 
 * Create a Mixin or View which inherits from this action mixin.
-* Be sure to add a general ``get_success_url()`` function or custom success
+* Be sure to add a general ``get_success_re_path)`` function or custom success
   functions for each post action.
 * Create your post actions
 * Make sure to add this action names to the name attribute of an input field.
@@ -80,7 +80,7 @@ Usage in a views.py::
     class NewsEntryDetailView(NewsDetailBase):
         model = NewsEntry
 
-    def get_success_url(self):
+    def get_success_re_pathself):
         return reverse('newsentry_detail', kwargs={'pk': self.object.pk})
 
         def post_verify(self):

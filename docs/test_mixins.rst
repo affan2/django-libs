@@ -101,7 +101,7 @@ in your integration tests (don't confuse these tests with your unit tests).
 Let's assume that you have defined your ``urls.py`` like this::
 
     ...
-    url(r'^invoice/(?P<pk>\d+)/', InvoiceDetailView.as_view(), name='invoice_detail'),
+    re_path(r'^invoice/(?P<pk>\d+)/', InvoiceDetailView.as_view(), name='invoice_detail'),
     ...
 
 In order to test such a view, you would create an
@@ -180,7 +180,7 @@ the ViewTestMixin::
             ...
 
         def test_view(self):
-            resp = self.client.get(self.get_url())
+            resp = self.client.get(self.get_re_path))
 
 Now we have got it down to a one-liner to call ``self.client.get`` in a future
 proof and maintainable way. After writing a few hundred tests with this
@@ -232,7 +232,7 @@ testing, which you probably should, you will write a lot of::
 
     def test_view(self):
         # case 1
-        resp = self.client.get(self.get_url())
+        resp = self.client.get(self.get_re_path))
         self.assertEqual(resp.status_code, 200, msg=(
             'If this then that, because foo is bar.'))
         # case 2
